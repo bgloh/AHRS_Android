@@ -1,0 +1,44 @@
+<!doctype html>
+<html ng-app="app">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="./MadgwickAHRS.js"></script>
+  </head>
+  <h2> ahrs with angularJS </h2>
+  <div ng-controller="AhrsController as ahrs">
+  <body>
+  	<input type="text" ng-model="message" placeholder="add new message"</input>
+  	<input type="button" value="start"></input>
+  	<br>
+    <p> description: {{ahrs.description}} </p>
+    <p> iteration number : {{ahrs.iterationNumber}} </p>
+    <p> quaternions : {{ahrs.quarternions}} </p>
+
+  </body>
+</div>
+  </html>
+
+  <script>
+ var app1 = angular.module('app', []);
+  app1.controller('AhrsController', function($interval ) {
+    var ahrs = this;
+    var i = 0;
+    ahrs.description = "ahrs calculation";
+    //MadgwickAHRS(sampleRateInHerze, filterNoiseValues);
+    madgwick = new MadgwickAHRS(1, {kp:0.5, ki:0});
+
+    function madgwickUpdate()
+    {
+    	ahrs.iterationNumber = i++;console.log(i);
+    	madgwick.update(1,1,1,1,1,1,1,1,1);
+    	ahrs.quarternions = madgwick.getQuaternion();
+    }
+   
+ 
+    	
+    	//ahrs.string2 = madgwick.getQuaternion();
+    	
+    	$interval(madgwickUpdate, 1000); 
+    
+  });
+  </script>
